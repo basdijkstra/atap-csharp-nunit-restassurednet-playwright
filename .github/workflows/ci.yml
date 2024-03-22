@@ -42,5 +42,8 @@ jobs:
       - name: Build (${{ matrix.framework }})
         run: dotnet build --framework ${{ matrix.framework }} --no-restore
 
-      - name: Run tests (${{ matrix.framework }})
-        run: dotnet test --framework ${{ matrix.framework }} --no-restore --no-build --verbosity normal
+      - name: Run unit tests (${{ matrix.framework }})
+        run: dotnet test --framework ${{ matrix.framework }} --no-restore --no-build --verbosity normal --filter UnitTests
+
+      - name: Run API tests (${{ matrix.framework }})
+        run: dotnet test --framework ${{ matrix.framework }} --no-restore --no-build --verbosity normal --filter ApiTests
