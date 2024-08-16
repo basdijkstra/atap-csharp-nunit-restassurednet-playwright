@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using ATAPNUnitRestAssuredNetPlaywright.ApiTests.Models;
+using NUnit.Framework;
 using static RestAssured.Dsl;
 
 namespace ATAPNUnitRestAssuredNetPlaywright.ApiTests
@@ -23,15 +24,38 @@ namespace ATAPNUnitRestAssuredNetPlaywright.ApiTests
         }
 
         [Test]
-        public void CreateNewPost_CheckStatusCode()
+        public void CreateNewPost_UsingSerialization_FromStronglyTypedObject_CheckStatusCode()
         {
-            string post = """
-                {
-                    "userId": 1,
-                    "title": "My blog post title",
-                    "body": "This is the text of my latest blog post."
-                }
-                """;
+            Post post = new Post
+            {
+                UserId = 1,
+                Title = "My new blog post title",
+                Body = "This is the body of my blog post"
+            };
+
+            object id = Given()
+                .ContentType("application/json")
+                .Body(post)
+                .When()
+                .Post("https://jsonplaceholder.typicode.com/posts")
+                .Then()
+                .StatusCode(201)
+                .Extract()
+                .Body("$.id");
+
+            // Normally, this should be an int, but the Extract() method returns numeric values as a long
+            Assert.That(id, Is.InstanceOf(typeof(long)));
+        }
+
+        [Test]
+        public void CreateNewPost_UsingSerialization_FromAnonymousObject_CheckStatusCode()
+        {
+            var post = new
+            {
+                userId = 1,
+                title = "My new blog post title",
+                body = "This is the body of my blog post"
+            };
 
             object id = Given()
                 .ContentType("application/json")
