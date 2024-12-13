@@ -1,4 +1,5 @@
-﻿using Microsoft.Playwright;
+﻿using ATAPNUnitRestAssuredNetPlaywright.UiTests.Pages;
+using Microsoft.Playwright;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
@@ -10,13 +11,9 @@ namespace ATAPNUnitRestAssuredNetPlaywright.UiTests
         [Test]
         public async Task CheckLoginToSauceDemoShop()
         {
-            // Navigate to the Sauce Demo home page
-            await Page.GotoAsync("https://www.saucedemo.com");
-
-            // Perform the login sequence
-            await Page.GetByPlaceholder("Username").FillAsync("standard_user");
-            await Page.GetByPlaceholder("Password").FillAsync("secret_sauce");
-            await Page.GetByRole(AriaRole.Button, new() { Name = "Login" }).ClickAsync();
+            var loginPage = new LoginPage(Page);
+            await loginPage.Open();
+            await loginPage.LoginAs("standard_user", "secret_sauce");            
 
             // Check that the Sauce Labs Backpack product link is visible
             await Expect(Page.GetByText("Sauce Labs Backpack")).ToBeVisibleAsync();
