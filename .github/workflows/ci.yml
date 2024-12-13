@@ -47,3 +47,7 @@ jobs:
 
       - name: Run API tests (${{ matrix.framework }})
         run: dotnet test --framework ${{ matrix.framework }} --no-restore --no-build --verbosity normal --filter ApiTests
+        
+      - name: Install Playwright browsers
+        shell: pwsh
+        run: ./ATAPNUnitRestAssuredNetPlaywright/bin/Debug/net8.0/playwright.ps1 install
